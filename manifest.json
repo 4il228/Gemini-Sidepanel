@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "AI Assistant SidePanel",
+  "version": "1.0.0",
+  "description": "Интеграция веб-интерфейса Gemini в sidePanel с поддержкой скриншотов в один клик.",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "storage",
+    "commands",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://gemini.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service_worker.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "commands": {
+    "toggle-sidepanel": {
+      "suggested_key": {
+        "default": "Alt+G",
+        "mac": "MacCtrl+G"
+      },
+      "description": "Открыть/закрыть боковую панель AI Assistant"
+    }
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_csp",
+        "enabled": true,
+        "path": "rules/net_request_rules.json"
+      }
+    ]
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}
