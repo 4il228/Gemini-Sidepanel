@@ -1,0 +1,82 @@
+/* Переменные темы (Material Design 3 — фиксированные значения) */
+:root {
+  --fab-bg: #1a73e8;
+  --fab-bg-hover: #1557b0;
+  --fab-size: 48px;
+  --fab-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --error-color: #d93025;
+  --disabled-opacity: 0.5;
+  --transition-duration: 0.2s;
+}
+
+/* Контейнер занимает 100% площади sidePanel */
+.panel-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Iframe Gemini — полный охват родителя */
+#gemini-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Floating Action Button — фиксация поверх iframe */
+#capture-btn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9999;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  border-radius: 50%;
+  background: var(--fab-bg);
+  box-shadow: var(--fab-shadow);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-duration) ease;
+}
+#capture-btn:hover {
+  background: var(--fab-bg-hover);
+  transform: scale(1.05);
+}
+#capture-btn.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  animation: spin 1s linear infinite;
+}
+#capture-btn.error {
+  outline: 2px solid var(--error-color);
+  outline-offset: 2px;
+  animation: error-pulse 1.5s ease;
+}
+#capture-btn.disabled {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+/* Иконка внутри кнопки */
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+}
+.btn-text {
+  display: none;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes error-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(217,48,37,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(217,48,37,0); }
+  100% { box-shadow: 0 0 0 0 rgba(217,48,37,0); }
+}
