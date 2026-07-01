@@ -10,17 +10,27 @@ chrome.sidePanel.onClosed.addListener(() => {
 });
 
 // Обработка горячих клавиш (полноценный toggle: открыть/закрыть)
-chrome.commands.onCommand.addListener(async (command) => {
+// ВАЖНО: async/await разрывает user gesture контекст, поэтому используем callbacks
+chrome.commands.onCommand.addListener((command) => {
   if (command === "toggle-sidepanel") {
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    if (!tab) return;
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+      if (!tabs || !tabs[0]) return;
+      const windowId = tabs[0].windowId;
 
-    const windowId = tab.windowId;
-    const { sidePanelOpen } = await chrome.storage.session.get('sidePanelOpen');
+      chrome.storage.session.get('sidePanelOpen', (result) => {
+        const sidePanelOpen = result.sidePanelOpen;
 
-    // Переключаем состояние: если было открыто — закрываем, иначе открываем
-    await chrome.sidePanel[sidePanelOpen ? 'close' : 'open']({ windowId });
-    await chrome.storage.session.set({ sidePanelOpen: !sidePanelOpen });
+        if (sidePanelOpen) {
+          chrome.sidePanel.close({ windowId }, () => {
+            chrome.storage.session.set({ sidePanelOpen: false });
+          });
+        } else {
+          chrome.sidePanel.open({ windowId }, () => {
+            chrome.storage.session.set({ sidePanelOpen: true });
+          });
+        }
+      });
+    });
   }
 });
 
