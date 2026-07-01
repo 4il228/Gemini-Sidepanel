@@ -1,3 +1,11 @@
+/* Сброс — убираем дефолтные отступы body и скролл на самой панели */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 /* Переменные темы (Material Design 3 — фиксированные значения) */
 :root {
   --fab-bg: #1a73e8;
@@ -12,7 +20,7 @@
 /* Контейнер занимает 100% площади sidePanel */
 .panel-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   position: relative;
   overflow: hidden;
 }
@@ -27,7 +35,7 @@
 /* Floating Action Button — фиксация поверх iframe */
 #capture-btn {
   position: fixed;
-  bottom: 16px;
+  bottom: 100px;
   right: 16px;
   z-index: 9999;
   width: var(--fab-size);
