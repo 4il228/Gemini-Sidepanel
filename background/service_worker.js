@@ -1,30 +1,37 @@
-// Инициализация состояния при установке
+let _sidePanelOpen = false;
+
+chrome.storage.session.get("sidePanelOpen").then(({ sidePanelOpen }) => {
+  _sidePanelOpen = !!sidePanelOpen;
+});
+
+chrome.storage.session.onChanged.addListener((changes) => {
+  if (changes.sidePanelOpen) {
+    _sidePanelOpen = changes.sidePanelOpen.newValue;
+  }
+});
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.session.set({ sidePanelOpen: false });
 });
 
-// Слушатель закрытия SidePanel
 chrome.sidePanel.onClosed.addListener(() => {
   chrome.storage.session.set({ sidePanelOpen: false });
 });
 
-// Слушатель глобальных команд
 chrome.commands.onCommand.addListener((command) => {
   if (command !== "toggle-sidepanel") return;
 
-  chrome.storage.session.get("sidePanelOpen", ({ sidePanelOpen }) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (!tab) return;
+  _sidePanelOpen = !_sidePanelOpen;
 
-      if (sidePanelOpen) {
-        chrome.sidePanel.close({ tabId: tab.id });
-        chrome.storage.session.set({ sidePanelOpen: false });
-      } else {
-        chrome.sidePanel.open({ tabId: tab.id });
-        chrome.storage.session.set({ sidePanelOpen: true });
-      }
+  if (_sidePanelOpen) {
+    chrome.sidePanel.open({});
+    chrome.storage.session.set({ sidePanelOpen: true });
+  } else {
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      if (tab) chrome.sidePanel.close({ tabId: tab.id });
     });
-  });
+    chrome.storage.session.set({ sidePanelOpen: false });
+  }
 });
 
 // Слушатель IPC сообщений от SidePanel для выполнения скриншота
