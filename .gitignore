@@ -1,1 +1,20 @@
+# Chrome extension cache (auto-generated on load)
 _metadata/
+generated_indexed_rulesets/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs / editors
+.vscode/
+.idea/
+*.sublime-*
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
