@@ -1,4 +1,17 @@
 let _sidePanelOpen = false;
+let _activeTabId = null;
+
+chrome.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+  if (tab) _activeTabId = tab.id;
+});
+
+chrome.tabs.onActivated.addListener(({ tabId }) => {
+  _activeTabId = tabId;
+});
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  if (_activeTabId === tabId) _activeTabId = null;
+});
 
 chrome.storage.session.get("sidePanelOpen").then(({ sidePanelOpen }) => {
   _sidePanelOpen = !!sidePanelOpen;
@@ -19,17 +32,15 @@ chrome.sidePanel.onClosed.addListener(() => {
 });
 
 chrome.commands.onCommand.addListener((command) => {
-  if (command !== "toggle-sidepanel") return;
+  if (command !== "toggle-sidepanel" || !_activeTabId) return;
 
   _sidePanelOpen = !_sidePanelOpen;
 
   if (_sidePanelOpen) {
-    chrome.sidePanel.open({});
+    chrome.sidePanel.open({ tabId: _activeTabId });
     chrome.storage.session.set({ sidePanelOpen: true });
   } else {
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      if (tab) chrome.sidePanel.close({ tabId: tab.id });
-    });
+    chrome.sidePanel.close({ tabId: _activeTabId });
     chrome.storage.session.set({ sidePanelOpen: false });
   }
 });
