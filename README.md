@@ -144,8 +144,3 @@ A Chrome extension that embeds Google Gemini into the native side panel with one
 2. Go to `chrome://extensions` → click **Reload** on the extension card
 3. Test the changes in the side panel
 
----
-
-## License
-
-MIT
