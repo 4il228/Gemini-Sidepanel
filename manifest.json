@@ -22,7 +22,7 @@
     "default_path": "sidepanel/sidepanel.html"
   },
   "commands": {
-    "_execute_action": {
+    "toggle-sidepanel": {
       "suggested_key": {
         "default": "Alt+G",
         "mac": "MacCtrl+G"
